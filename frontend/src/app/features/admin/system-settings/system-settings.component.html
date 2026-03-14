@@ -1,0 +1,211 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>System Settings</h1>
+  </div>
+
+  <mat-tab-group animationDuration="200ms">
+
+    <!-- Departments Tab -->
+    <mat-tab label="Departments">
+      <div class="tab-content">
+        <div class="add-row">
+          <mat-form-field appearance="outline" class="flex-field">
+            <mat-label>New Department Name</mat-label>
+            <input matInput [(ngModel)]="newDeptName" (keyup.enter)="addDepartment()">
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="addDepartment()" [disabled]="!newDeptName.trim()">
+            <mat-icon>add</mat-icon> Add
+          </button>
+        </div>
+
+        <div class="settings-list">
+          <div class="settings-item" *ngFor="let dept of departments">
+            <!-- View Mode -->
+            <ng-container *ngIf="editingDeptId !== dept.id">
+              <div class="item-info">
+                <span class="item-name">{{ dept.name }}</span>
+                <span class="status-badge" [ngClass]="dept.isActive ? 'active' : 'inactive'">
+                  {{ dept.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </div>
+              <button mat-icon-button color="primary" (click)="startEditDept(dept)" title="Edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </ng-container>
+
+            <!-- Edit Mode -->
+            <ng-container *ngIf="editingDeptId === dept.id">
+              <mat-form-field appearance="outline" class="flex-field">
+                <input matInput [(ngModel)]="editingDeptName">
+              </mat-form-field>
+              <mat-slide-toggle [(ngModel)]="editingDeptActive" color="primary">Active</mat-slide-toggle>
+              <button mat-icon-button color="primary" (click)="saveDept()" title="Save">
+                <mat-icon>check</mat-icon>
+              </button>
+              <button mat-icon-button (click)="cancelEditDept()" title="Cancel">
+                <mat-icon>close</mat-icon>
+              </button>
+            </ng-container>
+          </div>
+
+          <div class="empty-state" *ngIf="departments.length === 0">
+            <p>No departments configured yet.</p>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Designations Tab -->
+    <mat-tab label="Designations">
+      <div class="tab-content">
+        <div class="add-row">
+          <mat-form-field appearance="outline" class="flex-field">
+            <mat-label>New Designation Title</mat-label>
+            <input matInput [(ngModel)]="newDesigTitle" (keyup.enter)="addDesignation()">
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="addDesignation()" [disabled]="!newDesigTitle.trim()">
+            <mat-icon>add</mat-icon> Add
+          </button>
+        </div>
+
+        <div class="settings-list">
+          <div class="settings-item" *ngFor="let desig of designations">
+            <ng-container *ngIf="editingDesigId !== desig.id">
+              <div class="item-info">
+                <span class="item-name">{{ desig.title }}</span>
+                <span class="status-badge" [ngClass]="desig.isActive ? 'active' : 'inactive'">
+                  {{ desig.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </div>
+              <button mat-icon-button color="primary" (click)="startEditDesig(desig)" title="Edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </ng-container>
+
+            <ng-container *ngIf="editingDesigId === desig.id">
+              <mat-form-field appearance="outline" class="flex-field">
+                <input matInput [(ngModel)]="editingDesigTitle">
+              </mat-form-field>
+              <mat-slide-toggle [(ngModel)]="editingDesigActive" color="primary">Active</mat-slide-toggle>
+              <button mat-icon-button color="primary" (click)="saveDesig()" title="Save">
+                <mat-icon>check</mat-icon>
+              </button>
+              <button mat-icon-button (click)="cancelEditDesig()" title="Cancel">
+                <mat-icon>close</mat-icon>
+              </button>
+            </ng-container>
+          </div>
+
+          <div class="empty-state" *ngIf="designations.length === 0">
+            <p>No designations configured yet.</p>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Leave Types Tab -->
+    <mat-tab label="Leave Types">
+      <div class="tab-content">
+        <div class="add-row">
+          <mat-form-field appearance="outline" class="flex-field">
+            <mat-label>Leave Type Name</mat-label>
+            <input matInput [(ngModel)]="newLtName">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="quota-field">
+            <mat-label>Default Quota (days)</mat-label>
+            <input matInput type="number" [(ngModel)]="newLtQuota" min="0">
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="addLeaveType()" [disabled]="!newLtName.trim()">
+            <mat-icon>add</mat-icon> Add
+          </button>
+        </div>
+
+        <div class="settings-list">
+          <div class="settings-item" *ngFor="let lt of leaveTypes">
+            <ng-container *ngIf="editingLtId !== lt.id">
+              <div class="item-info">
+                <span class="item-name">{{ lt.name }}</span>
+                <span class="item-detail">{{ lt.defaultQuota }} days/year</span>
+                <span class="status-badge" [ngClass]="lt.isActive ? 'active' : 'inactive'">
+                  {{ lt.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </div>
+              <button mat-icon-button color="primary" (click)="startEditLt(lt)" title="Edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </ng-container>
+
+            <ng-container *ngIf="editingLtId === lt.id">
+              <mat-form-field appearance="outline" class="flex-field">
+                <input matInput [(ngModel)]="editingLtName">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="quota-field">
+                <mat-label>Quota</mat-label>
+                <input matInput type="number" [(ngModel)]="editingLtQuota" min="0">
+              </mat-form-field>
+              <mat-slide-toggle [(ngModel)]="editingLtActive" color="primary">Active</mat-slide-toggle>
+              <button mat-icon-button color="primary" (click)="saveLt()" title="Save">
+                <mat-icon>check</mat-icon>
+              </button>
+              <button mat-icon-button (click)="cancelEditLt()" title="Cancel">
+                <mat-icon>close</mat-icon>
+              </button>
+            </ng-container>
+          </div>
+
+          <div class="empty-state" *ngIf="leaveTypes.length === 0">
+            <p>No leave types configured yet.</p>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Company Holidays Tab -->
+    <mat-tab label="Company Holidays">
+      <div class="tab-content">
+        <div class="add-row">
+          <mat-form-field appearance="outline" class="flex-field">
+            <mat-label>Holiday Name</mat-label>
+            <input matInput [(ngModel)]="newHolidayName">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="date-field">
+            <mat-label>Date</mat-label>
+            <input matInput type="date" [(ngModel)]="newHolidayDate">
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="addHoliday()" [disabled]="!newHolidayName.trim() || !newHolidayDate">
+            <mat-icon>add</mat-icon> Add
+          </button>
+        </div>
+
+        <div class="year-filter">
+          <mat-form-field appearance="outline">
+            <mat-label>Year</mat-label>
+            <mat-select [(ngModel)]="holidayYear" (selectionChange)="changeHolidayYear()">
+              <mat-option [value]="2024">2024</mat-option>
+              <mat-option [value]="2025">2025</mat-option>
+              <mat-option [value]="2026">2026</mat-option>
+              <mat-option [value]="2027">2027</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="settings-list">
+          <div class="settings-item" *ngFor="let h of holidays">
+            <div class="item-info">
+              <span class="item-name">{{ h.name }}</span>
+              <span class="item-detail">{{ h.date | date:'mediumDate' }}</span>
+            </div>
+            <button mat-icon-button color="warn" (click)="deleteHoliday(h.id)" title="Remove">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+
+          <div class="empty-state" *ngIf="holidays.length === 0">
+            <p>No holidays for {{ holidayYear }}.</p>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+</div>

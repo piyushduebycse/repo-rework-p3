@@ -1,0 +1,15 @@
+<mat-drawer-container class="layout-container" autosize>
+  
+  <mat-drawer #drawer class="sidenav" mode="side" opened="true">
+    <app-sidebar></app-sidebar>
+  </mat-drawer>
+
+  <mat-drawer-content class="content-wrapper">
+    <app-topbar [drawer]="drawer"></app-topbar>
+    
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-drawer-content>
+
+</mat-drawer-container>

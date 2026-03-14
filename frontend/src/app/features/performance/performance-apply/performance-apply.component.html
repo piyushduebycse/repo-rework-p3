@@ -1,0 +1,75 @@
+<div class="page-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="../my" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Submit Self-Review</h1>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-subtitle>Reflect on your performance and goals for the current review period.</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="review-form">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Review Year</mat-label>
+          <mat-select formControlName="reviewYear" required>
+            <mat-option [value]="2024">2024</mat-option>
+            <mat-option [value]="2025">2025</mat-option>
+            <mat-option [value]="2026">2026</mat-option>
+          </mat-select>
+          <mat-error *ngIf="reviewForm.get('reviewYear')?.hasError('required')">Year is required.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width text-area-field">
+          <mat-label>Key Deliverables</mat-label>
+          <textarea matInput formControlName="keyDeliverables" rows="4"
+                    placeholder="List your key deliverables and responsibilities..."></textarea>
+          <mat-hint>Minimum 10 characters.</mat-hint>
+          <mat-error *ngIf="reviewForm.get('keyDeliverables')?.hasError('required')">Key deliverables are required.</mat-error>
+          <mat-error *ngIf="reviewForm.get('keyDeliverables')?.hasError('minlength')">Please provide more detail.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width text-area-field">
+          <mat-label>Accomplishments</mat-label>
+          <textarea matInput formControlName="accomplishments" rows="5"
+                    placeholder="List your significant accomplishments, projects completed, and value delivered..."></textarea>
+          <mat-hint>Minimum 20 characters.</mat-hint>
+          <mat-error *ngIf="reviewForm.get('accomplishments')?.hasError('required')">Accomplishments are required.</mat-error>
+          <mat-error *ngIf="reviewForm.get('accomplishments')?.hasError('minlength')">Please provide more detail.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width text-area-field">
+          <mat-label>Areas for Improvement</mat-label>
+          <textarea matInput formControlName="areasOfImprovement" rows="5"
+                    placeholder="Where do you feel you could grow? What skills do you want to develop?"></textarea>
+          <mat-hint>Minimum 20 characters.</mat-hint>
+          <mat-error *ngIf="reviewForm.get('areasOfImprovement')?.hasError('required')">This field is required.</mat-error>
+          <mat-error *ngIf="reviewForm.get('areasOfImprovement')?.hasError('minlength')">Please provide more detail.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Self-Assessment Rating (1-5)</mat-label>
+          <mat-select formControlName="selfAssessmentRating">
+            <mat-option [value]="1">1 - Needs Improvement</mat-option>
+            <mat-option [value]="2">2 - Below Expectations</mat-option>
+            <mat-option [value]="3">3 - Meets Expectations</mat-option>
+            <mat-option [value]="4">4 - Exceeds Expectations</mat-option>
+            <mat-option [value]="5">5 - Outstanding</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-button type="button" routerLink="../my">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="reviewForm.invalid || submitting">
+            Submit Review
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

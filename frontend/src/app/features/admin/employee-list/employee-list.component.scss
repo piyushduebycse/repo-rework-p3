@@ -1,0 +1,199 @@
+@import '../../../../styles/variables';
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    margin: 0;
+    color: $text-primary;
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+}
+
+// ── Metrics ──
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+
+  .metric-card {
+    background-color: $surface-color;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+
+    .metric-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      opacity: 0.7;
+
+      &.total { color: $text-secondary; }
+      &.active { color: $accent; }
+      &.inactive { color: $warn; }
+      &.pending { color: $primary; }
+    }
+
+    .metric-info {
+      display: flex;
+      flex-direction: column;
+
+      .metric-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: $text-primary;
+
+        &.accent { color: $accent; }
+        &.warn { color: $warn; }
+        &.primary { color: $primary; }
+      }
+
+      .metric-label {
+        font-size: 0.8rem;
+        color: $text-secondary;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+}
+
+// ── Filters ──
+
+.filter-card {
+  background-color: $surface-color;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 16px 24px;
+
+  .filter-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .search-field {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    mat-form-field {
+      min-width: 160px;
+    }
+  }
+}
+
+// ── Table ──
+
+.table-card {
+  background-color: $surface-color;
+  border-radius: 8px;
+  overflow: hidden;
+
+  table {
+    width: 100%;
+    background: transparent;
+
+    th {
+      color: $text-secondary;
+      font-weight: 600;
+      border-bottom: 1px solid $border-color;
+    }
+
+    td {
+      color: $text-primary;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  .inactive-row {
+    opacity: 0.55;
+  }
+
+  .role-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+
+    &.admin { background-color: rgba($warn, 0.15); color: $warn; }
+    &.manager { background-color: rgba($primary, 0.15); color: $primary; }
+    &.employee { background-color: rgba($accent, 0.15); color: $accent; }
+  }
+
+  .status-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+
+    &.active { background-color: rgba($accent, 0.2); color: $accent; }
+    &.inactive { background-color: rgba(255, 255, 255, 0.1); color: $text-secondary; }
+  }
+
+  .empty-state {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: $text-secondary;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+  }
+}
+
+// ── Dialog Form ──
+
+::ng-deep .employee-form {
+  .form-row {
+    display: flex;
+    gap: 16px;
+
+    mat-form-field {
+      flex: 1;
+    }
+  }
+}
+
+// ── Responsive ──
+
+@media (max-width: 768px) {
+  .filter-card .filter-row {
+    flex-direction: column;
+
+    .search-field,
+    mat-form-field {
+      width: 100%;
+      min-width: unset;
+    }
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  ::ng-deep .employee-form .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

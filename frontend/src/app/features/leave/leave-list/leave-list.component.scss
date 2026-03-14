@@ -1,0 +1,70 @@
+@import '../../../../styles/variables';
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    margin: 0;
+    color: $text-primary;
+    font-size: 1.75rem;
+  }
+}
+
+.table-card {
+  background-color: $surface-color;
+  border-radius: 8px;
+  overflow: hidden;
+
+  table {
+    width: 100%;
+    background: transparent;
+
+    th {
+      color: $text-secondary;
+      font-weight: 600;
+      border-bottom: 1px solid $border-color;
+    }
+
+    td {
+      color: $text-primary;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+  }
+
+  .status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+
+    &.pending { background-color: rgba($primary, 0.2); color: $primary; }
+    &.approved { background-color: rgba($accent, 0.2); color: $accent; }
+    &.rejected { background-color: rgba($warn, 0.2); color: $warn; }
+    &.cancelled { background-color: rgba(255,255,255,0.1); color: $text-secondary; }
+  }
+
+  .empty-state {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: $text-secondary;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+  }
+}

@@ -1,0 +1,76 @@
+@import '../../../../styles/variables';
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: $bg-color;
+  background-image: radial-gradient(circle at top right, rgba($primary, 0.1) 0%, transparent 40%),
+                    radial-gradient(circle at bottom left, rgba($accent, 0.05) 0%, transparent 50%);
+}
+
+.login-container {
+  width: 100%;
+  max-width: 420px;
+  padding: 16px;
+}
+
+.login-card {
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  background-color: $surface-color;
+  border: 1px solid rgba(255,255,255,0.05);
+
+  mat-card-header {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .header-image {
+      background-color: rgba($primary, 0.1);
+      color: $primary;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 16px;
+      width: 56px;
+      height: 56px;
+
+      mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    mat-card-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: $text-primary;
+    }
+
+    mat-card-subtitle {
+      margin-top: 8px;
+    }
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  mat-card-actions {
+    padding: 16px;
+
+    .btn-login {
+      height: 48px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+  }
+}

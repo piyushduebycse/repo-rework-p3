@@ -1,0 +1,40 @@
+<div class="login-wrapper">
+  <div class="login-container">
+    <mat-card class="login-card">
+      <mat-card-header>
+        <div mat-card-avatar class="header-image">
+          <mat-icon>work</mat-icon>
+        </div>
+        <mat-card-title>Welcome to RevWorkforce</mat-card-title>
+        <mat-card-subtitle>Sign in to your account</mat-card-subtitle>
+      </mat-card-header>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email or Employee ID</mat-label>
+            <input matInput formControlName="identifier" placeholder="e.g. john@company.com or EMP-001">
+            <mat-error *ngIf="submitted && f['identifier'].errors">
+              Identifier is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password">
+            <mat-error *ngIf="submitted && f['password'].errors">
+              Password is required
+            </mat-error>
+          </mat-form-field>
+        </mat-card-content>
+        
+        <mat-card-actions>
+          <button mat-raised-button color="primary" type="submit" [disabled]="loading" class="full-width btn-login">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            LOGIN
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </div>
+</div>

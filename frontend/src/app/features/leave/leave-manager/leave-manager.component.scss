@@ -1,0 +1,30 @@
+@import '../../../../styles/variables';
+@import '../leave-list/leave-list.component.scss';
+
+.truncate-cell {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+
+  .btn-approve {
+    color: $accent;
+    background-color: rgba($accent, 0.1);
+    &:hover { background-color: rgba($accent, 0.2); }
+  }
+
+  .btn-reject {
+    color: $warn;
+    background-color: rgba($warn, 0.1);
+    &:hover { background-color: rgba($warn, 0.2); }
+  }
+}
+
+.text-sm {
+  font-size: 0.8rem;
+}

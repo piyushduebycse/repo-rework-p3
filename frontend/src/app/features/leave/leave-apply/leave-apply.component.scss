@@ -1,0 +1,115 @@
+@import '../../../../styles/variables';
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+
+  .back-btn {
+    margin-right: 16px;
+    background-color: rgba(255,255,255,0.05);
+  }
+
+  h1 {
+    margin: 0;
+    color: $text-primary;
+    font-size: 1.75rem;
+  }
+}
+
+.form-card {
+  background-color: $surface-color;
+  border-radius: 8px;
+  padding: 0;
+}
+
+.custom-stepper {
+  background: transparent;
+
+  .form-grid {
+    display: flex;
+    flex-direction: column;
+    padding-top: 16px;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .date-row {
+    display: flex;
+    gap: 16px;
+    
+    .half-width {
+      flex: 1;
+    }
+  }
+
+  .stepper-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+    
+    &.dual {
+      justify-content: space-between;
+    }
+    
+    button {
+      min-width: 120px;
+    }
+
+    .spinner {
+      margin-right: 8px;
+    }
+  }
+}
+
+.review-section {
+  padding: 16px;
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 8px;
+  margin-top: 16px;
+
+  h3 {
+    margin-top: 0;
+    color: $primary;
+    margin-bottom: 16px;
+  }
+
+  p {
+    margin-bottom: 8px;
+    color: $text-primary;
+    
+    strong {
+      color: $text-secondary;
+      display: inline-block;
+      width: 100px;
+    }
+  }
+
+  mat-divider {
+    margin: 16px 0;
+  }
+
+  .disclaimer {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: $text-secondary;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      color: $accent;
+    }
+  }
+}

@@ -1,0 +1,84 @@
+<div class="page-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="../my" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Apply for Leave</h1>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-horizontal-stepper #stepper class="custom-stepper">
+      <!-- Step 1: Request Details -->
+      <mat-step [stepControl]="leaveFormGroup">
+        <form [formGroup]="leaveFormGroup">
+          <ng-template matStepLabel>Details</ng-template>
+          
+          <div class="form-grid">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Leave Type</mat-label>
+              <mat-select formControlName="leaveTypeId" required>
+                <mat-option *ngFor="let balance of balances" [value]="balance.leaveTypeId" [disabled]="balance.remainingDays <= 0">
+                  {{balance.leaveTypeName}} ({{balance.remainingDays}} days remaining)
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="leaveFormGroup.get('leaveTypeId')?.hasError('required')">Leave type is required</mat-error>
+            </mat-form-field>
+
+            <div class="date-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="pickerStart" formControlName="startDate" required>
+                <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                <mat-datepicker #pickerStart></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="pickerEnd" formControlName="endDate" required>
+                <mat-datepicker-toggle matIconSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                <mat-datepicker #pickerEnd></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Reason</mat-label>
+              <textarea matInput rows="4" formControlName="reason" required placeholder="Provide a brief reason for your leave..."></textarea>
+              <mat-error *ngIf="leaveFormGroup.get('reason')?.hasError('required')">Reason is required</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="stepper-actions">
+            <button mat-raised-button color="primary" matStepperNext [disabled]="leaveFormGroup.invalid">Review ➔</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 2: Confirmation -->
+      <mat-step>
+        <ng-template matStepLabel>Review & Submit</ng-template>
+        
+        <div class="review-section">
+          <h3>Review Your Application</h3>
+          <p><strong>Leave Type:</strong> {{ leaveFormGroup.get('leaveTypeId')?.value }}</p>
+          <p><strong>Start Date:</strong> {{ leaveFormGroup.get('startDate')?.value | date }}</p>
+          <p><strong>End Date:</strong> {{ leaveFormGroup.get('endDate')?.value | date }}</p>
+          <p><strong>Reason:</strong> {{ leaveFormGroup.get('reason')?.value }}</p>
+          
+          <mat-divider></mat-divider>
+          <p class="disclaimer text-secondary">
+            <mat-icon inline="true">info</mat-icon> 
+            Your application will be routed to your manager for approval.
+          </p>
+        </div>
+
+        <div class="stepper-actions dual">
+          <button mat-button matStepperPrevious>Back to Edit</button>
+          <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="submitting">
+            <span *ngIf="submitting" class="spinner"></span>
+            Submit Application
+          </button>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-card>
+</div>

@@ -1,0 +1,156 @@
+@import '../../../../styles/variables';
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-header {
+  h1 {
+    margin: 0;
+    color: $text-primary;
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+}
+
+// ── Tab Styling ──
+
+::ng-deep .mat-mdc-tab-group {
+  .mat-mdc-tab-header {
+    background-color: $surface-color;
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid $border-color;
+  }
+}
+
+.tab-content {
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ── Add Row ──
+
+.add-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background-color: $surface-color;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 16px 20px;
+  flex-wrap: wrap;
+
+  .flex-field {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .quota-field {
+    width: 150px;
+  }
+
+  .date-field {
+    width: 180px;
+  }
+}
+
+.year-filter {
+  mat-form-field {
+    width: 120px;
+  }
+}
+
+// ── Settings List ──
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .settings-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: $surface-color;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 12px 20px;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    .item-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      .item-name {
+        font-weight: 500;
+        color: $text-primary;
+        font-size: 0.95rem;
+      }
+
+      .item-detail {
+        color: $text-secondary;
+        font-size: 0.85rem;
+      }
+    }
+
+    .status-badge {
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+
+      &.active { background-color: rgba($accent, 0.2); color: $accent; }
+      &.inactive { background-color: rgba(255, 255, 255, 0.1); color: $text-secondary; }
+    }
+
+    mat-form-field {
+      margin-bottom: -1.25em; // compensate for mat-form-field bottom spacing
+    }
+
+    .flex-field {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .quota-field {
+      width: 120px;
+    }
+  }
+
+  .empty-state {
+    padding: 32px;
+    text-align: center;
+    color: $text-secondary;
+    background-color: $surface-color;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+  }
+}
+
+// ── Responsive ──
+
+@media (max-width: 768px) {
+  .add-row {
+    flex-direction: column;
+    align-items: stretch;
+
+    .flex-field,
+    .quota-field,
+    .date-field {
+      width: 100%;
+      min-width: unset;
+    }
+  }
+}

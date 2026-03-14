@@ -1,0 +1,120 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>My Performance</h1>
+    <button mat-raised-button color="primary" routerLink="../apply" *ngIf="currentUser?.role !== 'ADMIN'">
+      <mat-icon>edit_note</mat-icon> Submit Self-Review
+    </button>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- Reviews Column -->
+    <div class="reviews-section" *ngIf="currentUser?.role !== 'ADMIN'">
+      <h2 class="section-title">Past Reviews</h2>
+
+      <div class="empty-state" *ngIf="reviews.length === 0">
+        <mat-icon>sentiment_neutral</mat-icon>
+        <p>No performance reviews found.</p>
+      </div>
+
+      <mat-accordion class="review-accordion">
+        <mat-expansion-panel *ngFor="let review of reviews"
+                            (opened)="toggleExpand(review.id)"
+                            [expanded]="expandedReviewId === review.id"
+                            class="custom-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong>{{ review.reviewYear }}</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              Status: <span class="status-badge" [ngClass]="review.status.toLowerCase() || 'pending'">{{ review.status || 'PENDING' }}</span>
+              <span class="score-badge" *ngIf="review.managerRating">Rating: {{ review.managerRating }} / 5</span>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div class="panel-content">
+            <div class="review-grid">
+              <div class="review-block" *ngIf="review.keyDeliverables">
+                <h4>Key Deliverables</h4>
+                <p>{{ review.keyDeliverables }}</p>
+              </div>
+              <div class="review-block">
+                <h4>Accomplishments</h4>
+                <p>{{ review.accomplishments }}</p>
+              </div>
+              <div class="review-block">
+                <h4>Areas of Improvement</h4>
+                <p>{{ review.areasOfImprovement }}</p>
+              </div>
+              <div class="review-block" *ngIf="review.selfAssessmentRating">
+                <h4>Self-Assessment Rating</h4>
+                <p>{{ review.selfAssessmentRating }} / 5</p>
+              </div>
+              <div class="review-block" *ngIf="review.managerFeedback">
+                <h4>Manager Feedback</h4>
+                <p class="manager-text">{{ review.managerFeedback }}</p>
+              </div>
+            </div>
+
+            <div class="score-slider" *ngIf="review.managerRating">
+              <span>Performance Rating:</span>
+              <mat-slider min="1" max="5" step="1" disabled>
+                <input matSliderThumb [value]="review.managerRating">
+              </mat-slider>
+              <span class="score-value">{{ review.managerRating }}</span>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
+    <!-- Goals Column -->
+    <div class="goals-section" [ngStyle]="currentUser?.role === 'ADMIN' ? {'grid-column': '1 / -1'} : {}">
+      <div class="goals-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 class="section-title" style="margin-bottom: 0;">My Goals</h2>
+        <button mat-button color="primary" (click)="openGoalDialog()">
+          <mat-icon>add</mat-icon> Add Goal
+        </button>
+      </div>
+      <mat-card class="goals-card">
+        <mat-card-content>
+          <div class="empty-state" *ngIf="goals.length === 0">
+            <mat-icon>flag</mat-icon>
+            <p>No goals set yet.</p>
+          </div>
+
+          <div class="goal-item" *ngFor="let goal of goals">
+            <div class="goal-header">
+              <span class="goal-priority" [ngClass]="goal.priority.toLowerCase()">{{ goal.priority }}</span>
+              <span class="goal-status" [ngClass]="goal.status.toLowerCase().replace('_', '-')">{{ goal.status.replace('_', ' ') }}</span>
+            </div>
+            <p class="goal-desc">{{ goal.description }}</p>
+            <div class="goal-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="goal.progressPercentage"></div>
+              </div>
+              <span class="progress-text">{{ goal.progressPercentage }}%</span>
+            </div>
+            <p class="goal-deadline" *ngIf="goal.deadline">Deadline: {{ goal.deadline | date:'mediumDate' }}</p>
+
+            <div class="goal-progress-update" style="margin-top: 15px; display: flex; align-items: center; gap: 15px;" *ngIf="goal.status !== 'COMPLETED'">
+              <span style="font-size: 13px; color: #666; font-weight: 500;">Update Progress:</span>
+              <mat-slider min="0" max="100" step="5" style="flex: 1;">
+                <input matSliderThumb [value]="goal.progressPercentage" (change)="updateGoalProgress(goal.id, $event)">
+              </mat-slider>
+            </div>
+            
+            <div class="goal-actions" style="margin-top: 15px; display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid #f0f0f0; padding-top: 10px;">
+              <button mat-stroked-button color="primary" class="small-btn" (click)="markGoalComplete(goal.id)" *ngIf="goal.status !== 'COMPLETED'">
+                <mat-icon>task_alt</mat-icon> Complete
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteGoal(goal.id)" title="Delete Goal">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+  </div>
+</div>

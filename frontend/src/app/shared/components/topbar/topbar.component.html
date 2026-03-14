@@ -1,0 +1,33 @@
+<mat-toolbar class="topbar">
+
+  <button mat-icon-button (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  
+  <span class="spacer"></span>
+  
+  <app-notification-bell></app-notification-bell>
+
+  <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-button">
+    <mat-icon>account_circle</mat-icon>
+    <span class="user-name" *ngIf="currentUser">{{ currentUser.firstName }} {{ currentUser.lastName }}</span>
+    <mat-icon class="arrow">arrow_drop_down</mat-icon>
+  </button>
+  
+  <mat-menu #profileMenu="matMenu" class="custom-menu">
+    <div class="user-info" *ngIf="currentUser">
+      <p class="name">{{ currentUser.firstName }} {{ currentUser.lastName }}</p>
+      <p class="email">{{ currentUser.email }}</p>
+      <div class="role-badge">{{ currentUser.role }}</div>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="openProfile()">
+      <mat-icon>person</mat-icon>
+      <span>My Profile</span>
+    </button>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon color="warn">exit_to_app</mat-icon>
+      <span class="logout-text">Logout</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>

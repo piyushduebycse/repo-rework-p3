@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>Create a New Goal</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="goalForm" class="goal-form">
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Goal Description</mat-label>
+      <textarea matInput formControlName="description" rows="3" placeholder="What do you want to achieve?"></textarea>
+      <mat-error *ngIf="goalForm.get('description')?.hasError('required')">
+        Description is required
+      </mat-error>
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Priority</mat-label>
+        <mat-select formControlName="priority">
+          <mat-option value="HIGH">High</mat-option>
+          <mat-option value="MEDIUM">Medium</mat-option>
+          <mat-option value="LOW">Low</mat-option>
+        </mat-select>
+        <mat-error *ngIf="goalForm.get('priority')?.hasError('required')">
+          Priority is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Deadline (Optional)</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="deadline">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="isSubmitting">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="goalForm.invalid || isSubmitting">
+    {{ isSubmitting ? 'Creating...' : 'Create Goal' }}
+  </button>
+</mat-dialog-actions>

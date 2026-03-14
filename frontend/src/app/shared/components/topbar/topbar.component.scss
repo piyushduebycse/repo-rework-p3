@@ -1,0 +1,86 @@
+@import '../../../../styles/variables';
+
+.topbar {
+  background-color: $surface-color;
+  color: $text-primary;
+  border-bottom: 1px solid $border-color;
+  height: 64px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .profile-button {
+    border-radius: 20px;
+    padding: 0 16px 0 8px;
+    margin-left: 16px;
+    background-color: rgba(255,255,255,0.05);
+
+    &:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    .user-name {
+      margin: 0 8px;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .arrow {
+      margin-left: 0;
+    }
+  }
+}
+
+::ng-deep .custom-menu {
+  background-color: $surface-color !important;
+  border: 1px solid $border-color;
+  border-radius: 8px !important;
+  margin-top: 8px;
+
+  .user-info {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(0,0,0,0.2);
+    
+    .name {
+      margin: 0;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: $text-primary;
+    }
+
+    .email {
+      margin: 4px 0 12px;
+      font-size: 0.85rem;
+      color: $text-secondary;
+    }
+
+    .role-badge {
+      background-color: rgba($primary, 0.2);
+      color: $primary;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .mat-mdc-menu-item {
+    color: $text-primary;
+
+    &:hover {
+      background-color: rgba(255,255,255,0.05);
+    }
+
+    .logout-text {
+      color: $warn;
+    }
+  }
+}

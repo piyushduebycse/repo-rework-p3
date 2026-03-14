@@ -1,0 +1,17 @@
+<div class="sidebar-container">
+  <div class="logo-section">
+    <mat-icon class="logo-icon">work</mat-icon>
+    <span class="logo-text">RevWorkforce</span>
+  </div>
+
+  <mat-nav-list>
+    <a *ngFor="let item of filteredMenu" 
+       mat-list-item 
+       [routerLink]="item.route" 
+       routerLinkActive="active-link"
+       [routerLinkActiveOptions]="{exact: item.route === '/dashboard'}">
+      <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+      <div matListItemTitle>{{ item.label }}</div>
+    </a>
+  </mat-nav-list>
+</div>

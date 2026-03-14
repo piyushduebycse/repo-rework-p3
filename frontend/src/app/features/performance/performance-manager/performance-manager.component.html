@@ -1,0 +1,131 @@
+<div class="page-container" *ngIf="!selectedReview">
+  <div class="page-header">
+    <h1>Team Performance Reviews</h1>
+  </div>
+
+  <mat-card class="table-card">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z0">
+
+      <ng-container matColumnDef="employeeName">
+        <th mat-header-cell *matHeaderCellDef> Employee </th>
+        <td mat-cell *matCellDef="let element">
+          <strong>{{element.employeeName}}</strong>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="reviewYear">
+        <th mat-header-cell *matHeaderCellDef> Year </th>
+        <td mat-cell *matCellDef="let element"> {{element.reviewYear}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let element">
+          <span class="status-badge" [ngClass]="element.status?.toLowerCase() || 'pending'">
+            {{element.status}}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="submittedAt">
+        <th mat-header-cell *matHeaderCellDef> Submitted </th>
+        <td mat-cell *matCellDef="let element"> {{element.submittedAt | date}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-button color="primary" (click)="viewReview(element)">
+            {{ element.status === 'SUBMITTED' ? 'Review & Score' : 'View' }}
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <div class="empty-state" *ngIf="dataSource.length === 0">
+      <mat-icon>assessment</mat-icon>
+      <p>No team performance reviews found.</p>
+    </div>
+  </mat-card>
+</div>
+
+<!-- Detailed Review Modal/Panel -->
+<div class="page-container detail-view" *ngIf="selectedReview">
+  <div class="page-header">
+    <button mat-icon-button (click)="closeReview()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Reviewing {{ selectedReview.employeeName }}</h1>
+    <span class="spacer"></span>
+    <span class="status-badge" [ngClass]="selectedReview.status.toLowerCase() || 'pending'">
+      {{selectedReview.status}}
+    </span>
+  </div>
+
+  <div class="review-layout">
+    <div class="employee-input">
+      <mat-card class="content-card">
+        <mat-card-header>
+          <mat-card-title>Self-Assessment: {{ selectedReview.reviewYear }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-block">
+            <h3>Key Deliverables</h3>
+            <p>{{ selectedReview.keyDeliverables }}</p>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="info-block">
+            <h3>Accomplishments</h3>
+            <p>{{ selectedReview.accomplishments }}</p>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="info-block">
+            <h3>Areas for Improvement</h3>
+            <p>{{ selectedReview.areasOfImprovement }}</p>
+          </div>
+
+          <div class="info-block" *ngIf="selectedReview.selfAssessmentRating">
+            <h3>Self-Assessment Rating</h3>
+            <p>{{ selectedReview.selfAssessmentRating }} / 5</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="manager-input">
+      <mat-card class="content-card feedback-card">
+        <mat-card-header>
+          <mat-card-title>Manager Feedback</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="score-section">
+            <label>Performance Rating: <span class="score-value">{{ score }} / 5</span></label>
+            <mat-slider min="1" max="5" step="1" [disabled]="selectedReview.status === 'REVIEWED'">
+              <input matSliderThumb [(ngModel)]="score">
+            </mat-slider>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Constructive Feedback</mat-label>
+            <textarea matInput rows="6" [(ngModel)]="feedbackText"
+                      [disabled]="selectedReview.status === 'REVIEWED'"
+                      placeholder="Provide specific feedback, guidance, and next steps..."></textarea>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions align="end" *ngIf="selectedReview.status !== 'REVIEWED'">
+          <button mat-button (click)="closeReview()">Cancel</button>
+          <button mat-raised-button color="primary" (click)="submitFeedback()" [disabled]="!feedbackText || feedbackText.length < 10">
+            Submit Feedback
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

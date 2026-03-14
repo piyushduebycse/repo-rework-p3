@@ -1,0 +1,106 @@
+@import '../../../../styles/variables';
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  &.detail-view {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+
+  .back-btn {
+    margin-right: 16px;
+    background-color: rgba(255,255,255,0.05);
+  }
+
+  h1 { margin: 0; color: $text-primary; }
+  .spacer { flex: 1; }
+}
+
+.table-card {
+  background-color: $surface-color;
+  border-radius: 8px;
+  overflow: hidden;
+
+  table { width: 100%; background: transparent; }
+  th { color: $text-secondary; font-weight: 600; border-bottom: 1px solid $border-color; }
+  td { color: $text-primary; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+  .empty-state {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: $text-secondary;
+    mat-icon { font-size: 48px; width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.5; }
+  }
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+
+  &.pending { background-color: rgba(255,255,255,0.1); color: $text-secondary; }
+  &.submitted { background-color: rgba($primary, 0.2); color: $primary; }
+  &.reviewed { background-color: rgba($accent, 0.2); color: $accent; }
+}
+
+.review-layout {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 24px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.content-card {
+  background-color: $surface-color;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+
+  mat-card-header {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+  }
+
+  .info-block {
+    margin-bottom: 24px;
+    h3 { margin-top: 0; color: $text-secondary; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    p { margin: 0; line-height: 1.6; }
+  }
+}
+
+.feedback-card {
+  .score-section {
+    background-color: rgba($accent, 0.05);
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label { font-weight: 600; color: $text-secondary; }
+    .score-value { color: $accent; font-size: 1.25rem; margin-left: 8px; }
+  }
+
+  .full-width { width: 100%; }
+
+  mat-card-actions {
+    padding: 16px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+}

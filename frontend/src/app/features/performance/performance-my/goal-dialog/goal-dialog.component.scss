@@ -1,0 +1,29 @@
+.goal-form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+  min-width: 400px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  
+  .half-width {
+    flex: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .goal-form {
+    min-width: 100%;
+  }
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

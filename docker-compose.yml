@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: revworkforce-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: revworkforce_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - revworkforce-network
+
+  # Auth & Employee Service
+  auth-employee-service:
+    build:
+      context: .
+      dockerfile: auth-employee-service/Dockerfile
+    container_name: auth-employee-service
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      JWT_SECRET: dGhpc2lzYTMyYnl0ZWtleXN1cGVyc2VjcmV0MTIzNDU=
+      CORS_ORIGINS: http://localhost,http://localhost:4200,http://frontend
+      SERVER_PORT: 8081
+    ports:
+      - "8081:8081"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - revworkforce-network
+    restart: on-failure
+
+  # Leave & Performance Service
+  leave-performance-service:
+    build:
+      context: .
+      dockerfile: leave-performance-service/Dockerfile
+    container_name: leave-performance-service
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      JWT_SECRET: dGhpc2lzYTMyYnl0ZWtleXN1cGVyc2VjcmV0MTIzNDU=
+      CORS_ORIGINS: http://localhost,http://localhost:4200,http://frontend
+      SERVER_PORT: 8082
+    ports:
+      - "8082:8082"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - revworkforce-network
+    restart: on-failure
+
+  # Notification Service
+  notification-service:
+    build:
+      context: .
+      dockerfile: notification-service/Dockerfile
+    container_name: notification-service
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      JWT_SECRET: dGhpc2lzYTMyYnl0ZWtleXN1cGVyc2VjcmV0MTIzNDU=
+      CORS_ORIGINS: http://localhost,http://localhost:4200,http://frontend
+      SERVER_PORT: 8083
+    ports:
+      - "8083:8083"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - revworkforce-network
+    restart: on-failure
+
+  # Frontend (Angular + Nginx API Gateway)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: revworkforce-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - auth-employee-service
+      - leave-performance-service
+      - notification-service
+    networks:
+      - revworkforce-network
+    restart: on-failure
+
+volumes:
+  mysql_data:
+
+networks:
+  revworkforce-network:
+    driver: bridge

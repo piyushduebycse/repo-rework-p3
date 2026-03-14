@@ -1,0 +1,247 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Employee Management</h1>
+    <button mat-raised-button color="primary" (click)="openAddDialog()">
+      <mat-icon>person_add</mat-icon> Add Employee
+    </button>
+  </div>
+
+  <!-- Metrics Cards -->
+  <div class="metrics-grid" *ngIf="metrics">
+    <mat-card class="metric-card">
+      <mat-icon class="metric-icon total">groups</mat-icon>
+      <div class="metric-info">
+        <span class="metric-value">{{ metrics.totalEmployees }}</span>
+        <span class="metric-label">Total</span>
+      </div>
+    </mat-card>
+    <mat-card class="metric-card">
+      <mat-icon class="metric-icon active">check_circle</mat-icon>
+      <div class="metric-info">
+        <span class="metric-value accent">{{ metrics.activeEmployees }}</span>
+        <span class="metric-label">Active</span>
+      </div>
+    </mat-card>
+    <mat-card class="metric-card">
+      <mat-icon class="metric-icon inactive">cancel</mat-icon>
+      <div class="metric-info">
+        <span class="metric-value warn">{{ metrics.inactiveEmployees }}</span>
+        <span class="metric-label">Inactive</span>
+      </div>
+    </mat-card>
+    <mat-card class="metric-card">
+      <mat-icon class="metric-icon pending">pending_actions</mat-icon>
+      <div class="metric-info">
+        <span class="metric-value primary">{{ metrics.pendingLeaves }}</span>
+        <span class="metric-label">Pending Leaves</span>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Filters -->
+  <mat-card class="filter-card">
+    <div class="filter-row">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search employees</mat-label>
+        <input matInput [(ngModel)]="searchText" (keyup)="applySearch()" placeholder="Name, email, ID...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Department</mat-label>
+        <mat-select [(ngModel)]="filterDepartment" (selectionChange)="applyFilters()">
+          <mat-option value="">All Departments</mat-option>
+          <mat-option *ngFor="let dept of departments" [value]="dept.name">{{ dept.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Designation</mat-label>
+        <mat-select [(ngModel)]="filterDesignation" (selectionChange)="applyFilters()">
+          <mat-option value="">All Designations</mat-option>
+          <mat-option *ngFor="let desig of designations" [value]="desig.title">{{ desig.title }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="filterStatus" (selectionChange)="applyFilters()">
+          <mat-option value="">All</mat-option>
+          <mat-option value="true">Active</mat-option>
+          <mat-option value="false">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-icon-button color="primary" (click)="clearFilters()" title="Clear filters">
+        <mat-icon>filter_list_off</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+
+  <!-- Data Table -->
+  <mat-card class="table-card">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+
+      <ng-container matColumnDef="employeeId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let row"> {{ row.employeeId }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+        <td mat-cell *matCellDef="let row"> {{ row.firstName }} {{ row.lastName }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+        <td mat-cell *matCellDef="let row"> {{ row.email }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="departmentName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Department </th>
+        <td mat-cell *matCellDef="let row"> {{ row.departmentName || '-' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="designationTitle">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Designation </th>
+        <td mat-cell *matCellDef="let row"> {{ row.designationTitle || '-' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+        <td mat-cell *matCellDef="let row">
+          <span class="role-badge" [ngClass]="row.role.toLowerCase()">{{ row.role }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="isActive">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+        <td mat-cell *matCellDef="let row">
+          <span class="status-badge" [ngClass]="row.isActive ? 'active' : 'inactive'">
+            {{ row.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button (click)="openEditDialog(row)" title="Edit">
+            <mat-icon color="primary">edit</mat-icon>
+          </button>
+          <button mat-icon-button *ngIf="row.role !== 'ADMIN'"
+                  [color]="row.isActive ? 'warn' : 'accent'"
+                  (click)="toggleStatus(row)"
+                  [title]="row.isActive ? 'Deactivate' : 'Reactivate'">
+            <mat-icon>{{ row.isActive ? 'person_off' : 'person' }}</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          [class.inactive-row]="!row.isActive"></tr>
+    </table>
+
+    <div class="empty-state" *ngIf="dataSource.data.length === 0">
+      <mat-icon>people_outline</mat-icon>
+      <p>No employees found.</p>
+    </div>
+
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+  </mat-card>
+</div>
+
+<!-- Add/Edit Employee Dialog -->
+<ng-template #employeeDialog>
+  <h2 mat-dialog-title>{{ isEditing ? 'Edit Employee' : 'Add New Employee' }}</h2>
+  <mat-dialog-content>
+    <form [formGroup]="employeeForm" class="employee-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Employee ID</mat-label>
+          <input matInput formControlName="employeeId" placeholder="e.g. EMP001">
+          <mat-error>Employee ID is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email">
+          <mat-error>Valid email is required</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName">
+          <mat-error>First name is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName">
+          <mat-error>Last name is required</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Role</mat-label>
+          <mat-select formControlName="role">
+            <mat-option value="EMPLOYEE">Employee</mat-option>
+            <mat-option value="MANAGER">Manager</mat-option>
+            <mat-option value="ADMIN">Admin</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Department</mat-label>
+          <mat-select formControlName="departmentId">
+            <mat-option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</mat-option>
+          </mat-select>
+          <mat-error>Department is required</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Designation</mat-label>
+          <mat-select formControlName="designationId">
+            <mat-option *ngFor="let desig of designations" [value]="desig.id">{{ desig.title }}</mat-option>
+          </mat-select>
+          <mat-error>Designation is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Reporting Manager</mat-label>
+          <mat-select formControlName="managerId">
+            <mat-option [value]="null">None</mat-option>
+            <mat-option *ngFor="let mgr of managers" [value]="mgr.id">
+              {{ mgr.firstName }} {{ mgr.lastName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Joining Date</mat-label>
+          <input matInput formControlName="joiningDate" type="date">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Salary</mat-label>
+          <input matInput formControlName="salary" type="number">
+          <span matPrefix>&#8377;&nbsp;</span>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" (click)="saveEmployee()">
+      {{ isEditing ? 'Update' : 'Add Employee' }}
+    </button>
+  </mat-dialog-actions>
+</ng-template>
