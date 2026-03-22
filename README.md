@@ -30,7 +30,7 @@ docker-compose up --build -d
 
 **What this does natively behind the scenes:**
 1. Spins up a centralized `MySQL 8.0` container on port `3307`.
-2. Executes `init-databases.sql` to natively create 6 strictly isolated database schemas (`revworkforce_user_db`, `revworkforce_leaves_db`, etc.).
+2. Executes `init-databases.sql` to natively create 6 strictly isolated database schemas (`revworkforce_user_db`, `revworkforce_employee_db`, `revworkforce_leaves_db`, `revworkforce_performance_db`, `revworkforce_notifications_db`, `revworkforce_reporting_db`).
 3. Uses Maven inside Docker to compile `common` shared libraries.
 4. Compiles and launches all 9 backend microservices in strict dependency order (`config-server` -> `service-discovery` -> Domains -> `api-gateway`).
 

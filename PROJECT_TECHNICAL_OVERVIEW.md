@@ -10,7 +10,7 @@ Following the P3 modernization initiative, the monolithic backend has been fully
 
 **RevWorkforce** is designed to streamline employee data management, leave tracking, performance reviews, goal management, HR reporting, and real-time notifications. 
 
-To ensure massive scalability, strict fault isolation, and independent deployability, the application utilizes a **Cloud-Native Microservices Architecture** connecting 6 independent Spring Boot services via a **Spring Cloud Gateway**, utilizing **Netflix Eureka** for service discovery, **Spring Cloud Config** for centralized property management, and **OpenFeign** for inter-service communication. Each microservice maintains its own strict MySQL 8 Database schema.
+To ensure massive scalability, strict fault isolation, and independent deployability, the application utilizes a **Cloud-Native Microservices Architecture** connecting 6 independent Spring Boot services via a **Spring Cloud Gateway**, utilizing **Netflix Eureka** for service discovery, **Spring Cloud Config** for centralized property management, and **OpenFeign** for inter-service communication. Each microservice maintains its own strict MySQL 8 Database schema (`user_db`, `employee_db`, `leaves_db`, `performance_db`, `notifications_db`, `reporting_db`).
 
 ---
 
@@ -34,7 +34,7 @@ To ensure massive scalability, strict fault isolation, and independent deployabi
 
 ### Database
 - **Relational Database:** MySQL 8.0
-- **Architecture:** Database-per-service pattern (`user_db`, `employee_db`, `leave_db`, `performance_db`, `notification_db`, `report_db`).
+- **Architecture:** Database-per-service pattern (`revworkforce_user_db`, `revworkforce_employee_db`, `revworkforce_leaves_db`, `revworkforce_performance_db`, `revworkforce_notifications_db`, `revworkforce_reporting_db`).
 
 ---
 
@@ -60,16 +60,16 @@ The architecture utilizes the Spring Cloud suite. The Angular frontend makes all
           |                        |                        |
           v                        v                        v
 +-------------------+    +--------------------+    +--------------------+
-|   User Service    |    | Employee Mgmt      |    | Leave Service      |
-|     (:8081)       |    | Service (:8084)    |    |     (dynamic)      |
+|   User Service    |    |  Employee Service  |    |  Leave Service     |
+|     (:8081)       |    |     (:8084)        |    |     (:8082)        |
 +---------+---------+    +---------+----------+    +---------+----------+
           |                        |                        |
-[user_db] v             [employee_db] v               [leave_db] v
+[user_db] v             [employee_db] v               [leaves_db] v
      [ MySQL 8 ]              [ MySQL 8 ]               [ MySQL 8 ]
 ```
 
 ### Key Architectural Decisions:
-1. **Database-Per-Service Pattern**: Total schema isolation. The `leave_db` cannot perform SQL joins against the `user_db`. This guarantees fault isolation and allows individual services to scale databases independently.
+1. **Database-Per-Service Pattern**: Total schema isolation. The `leaves_db` cannot perform SQL joins against the `user_db`. This guarantees fault isolation and allows individual services to scale databases independently.
 2. **OpenFeign Clients**: Because databases are separated, services communicate internally over HTTP via `@FeignClient` interfaces.
 3. **Resilience4j Circuit Breakers**: Configured inside the API Gateway, these prevent slow underlying microservices from bottlenecking the entire system by immediately returning fallback responses (`503 Service Unavailable`).
 4. **Shared Common Module**: A shared compile-time Maven library (`common`) reduces boilerplate by centralizing DTOs, Global Exception Handlers, and `JwtAuthFilter` security validation.
