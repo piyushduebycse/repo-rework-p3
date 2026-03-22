@@ -1,9 +1,8 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
-# Strip <modules> section so Maven doesn't look for sibling services
-RUN sed -i 's/<modules>.*<\/modules>//g; /<modules>/,/<\/modules>/d' pom.xml
-COPY common ./common
+# Replace <modules> block with only the modules we need
+RUN awk '/<modules>/{p=1; print "  <modules>"; print "    <module>service-discovery</module>"; print "  </modules>"; next} p && /<\/modules>/{p=0; next} p{next} {print}' pom.xml > /tmp/pom.xml && mv /tmp/pom.xml pom.xml
 COPY service-discovery ./service-discovery
 RUN mvn clean package -pl service-discovery -am -DskipTests
 
