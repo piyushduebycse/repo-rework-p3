@@ -24,9 +24,15 @@
 
   <modules>
     <module>common</module>
-    <module>auth-employee-service</module>
-    <module>leave-performance-service</module>
+    <module>employee-service</module>
+    <module>leave-service</module>
+    <module>performance-service</module>
+    <module>reporting-service</module>
     <module>notification-service</module>
+    <module>service-discovery</module>
+    <module>config-server</module>
+    <module>api-gateway</module>
+    <module>user-service</module>
   </modules>
 
   <dependencyManagement>

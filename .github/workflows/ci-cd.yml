@@ -1,0 +1,69 @@
+name: RevWorkforce CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build Common Module First
+      run: mvn clean install -pl common -am -DskipTests
+
+    - name: Build All Microservices
+      run: mvn clean package -DskipTests
+
+    # Optional: Run tests if they exist
+    # - name: Run Unit Tests
+    #   run: mvn test
+
+    - name: Build Docker Images using Docker Compose
+      run: docker-compose build
+
+  # Example deployment job
+  deploy-to-production:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Tag and Push Images
+      run: |
+        docker-compose build
+        # Push images to your registry (requires updating docker-compose.yml to use image names pointing to your registry)
+        # docker-compose push
+    
+    - name: SSH to Production Server and Deploy
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.PROD_HOST }}
+        username: ${{ secrets.PROD_USER }}
+        key: ${{ secrets.PROD_SSH_KEY }}
+        script: |
+          cd /opt/revworkforce
+          git pull origin main
+          docker-compose down
+          docker-compose up --build -d
