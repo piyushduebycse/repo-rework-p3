@@ -3,12 +3,12 @@ WORKDIR /app
 COPY pom.xml .
 # Copy child modules
 COPY common ./common
-COPY discovery-server ./discovery-server
+COPY service-discovery ./service-discovery
 # Build the target module and its dependencies
-RUN mvn clean package -pl discovery-server -am -DskipTests
+RUN mvn clean package -pl service-discovery -am -DskipTests
 
 FROM eclipse-temurin:17-jre
 WORKDIR /app
-COPY --from=build /app/discovery-server/target/*.jar app.jar
+COPY --from=build /app/service-discovery/target/*.jar app.jar
 EXPOSE 8761
 ENTRYPOINT ["java", "-jar", "app.jar"]
