@@ -5,10 +5,8 @@ import com.revworkforce.common.dto.request.ReviewRequest;
 import com.revworkforce.common.dto.response.ReviewResponse;
 import com.revworkforce.common.exception.ResourceNotFoundException;
 import com.revworkforce.performanceservice.client.EmployeeClient;
-import com.revworkforce.performanceservice.entity.NotificationRepository;
 import com.revworkforce.performanceservice.entity.PerformanceReview;
 import com.revworkforce.performanceservice.entity.ReviewStatus;
-import com.revworkforce.performanceservice.repository.NotificationRepository;
 import com.revworkforce.performanceservice.repository.PerformanceReviewRepository;
 import com.revworkforce.common.security.UserPrincipal;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +30,7 @@ class PerformanceServiceImplTest {
 
     @Mock private PerformanceReviewRepository reviewRepository;
     @Mock private EmployeeClient employeeClient;
-    @Mock private NotificationRepository notificationRepository;
+
 
     @InjectMocks
     private PerformanceServiceImpl performanceService;

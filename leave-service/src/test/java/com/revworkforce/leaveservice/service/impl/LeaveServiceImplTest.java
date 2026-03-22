@@ -33,7 +33,6 @@ class LeaveServiceImplTest {
     @Mock private LeaveBalanceRepository leaveBalanceRepository;
     @Mock private LeaveTypeRepository leaveTypeRepository;
     @Mock private CompanyHolidayRepository companyHolidayRepository;
-    @Mock private NotificationRepository notificationRepository;
     @Mock private EmployeeClient employeeClient;
 
     @InjectMocks
