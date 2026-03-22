@@ -1,10 +1,10 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
-# Copy child modules
+# Strip <modules> section so Maven doesn't look for sibling services
+RUN sed -i 's/<modules>.*<\/modules>//g; /<modules>/,/<\/modules>/d' pom.xml
 COPY common ./common
 COPY service-discovery ./service-discovery
-# Build the target module and its dependencies
 RUN mvn clean package -pl service-discovery -am -DskipTests
 
 FROM eclipse-temurin:17-jre
