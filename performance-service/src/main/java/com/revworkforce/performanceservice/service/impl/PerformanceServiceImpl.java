@@ -8,7 +8,6 @@ import com.revworkforce.common.exception.ResourceNotFoundException;
 import com.revworkforce.common.security.UserPrincipal;
 import com.revworkforce.performanceservice.client.EmployeeClient;
 import com.revworkforce.performanceservice.entity.*;
-import com.revworkforce.performanceservice.repository.NotificationRepository;
 import com.revworkforce.performanceservice.repository.PerformanceReviewRepository;
 import com.revworkforce.performanceservice.service.interfaces.PerformanceService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,6 @@ public class PerformanceServiceImpl implements PerformanceService {
 
     private final PerformanceReviewRepository reviewRepository;
     private final EmployeeClient employeeClient;
-    private final NotificationRepository notificationRepository;
 
     private EmployeeDTO getCurrentEmployee() {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -74,14 +72,7 @@ public class PerformanceServiceImpl implements PerformanceService {
         review.setSubmittedAt(LocalDateTime.now());
         PerformanceReview saved = reviewRepository.save(review);
 
-        if (current.getManagerId() != null) {
-            createNotification(
-                    current.getManagerId(),
-                    current.getFirstName() + " has submitted their performance review.",
-                    NotificationType.REVIEW_SUBMITTED,
-                    saved.getId()
-            );
-        }
+        // Notification triggered via notification-service (cross-service)
 
         return mapToResponse(saved, current);
     }
@@ -131,24 +122,8 @@ public class PerformanceServiceImpl implements PerformanceService {
 
         PerformanceReview saved = reviewRepository.save(review);
 
-        createNotification(
-                saved.getEmployeeId(),
-                "Your manager has provided feedback on your performance review.",
-                NotificationType.REVIEW_FEEDBACK,
-                saved.getId()
-        );
-
+        // Notification triggered via notification-service (cross-service)
         return mapToResponse(saved, reviewOwner);
-    }
-
-    private void createNotification(Long recipientId, String message, NotificationType type, Long referenceId) {
-        Notification notification = Notification.builder()
-                .recipientId(recipientId)
-                .message(message)
-                .type(type)
-                .referenceId(referenceId)
-                .build();
-        notificationRepository.save(notification);
     }
 
     private ReviewResponse mapToResponse(PerformanceReview review, EmployeeDTO employee) {

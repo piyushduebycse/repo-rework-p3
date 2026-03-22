@@ -29,7 +29,6 @@ public class LeaveServiceImpl implements LeaveService {
     private final LeaveTypeRepository leaveTypeRepository;
     private final CompanyHolidayRepository companyHolidayRepository;
     private final EmployeeClient employeeClient;
-    private final NotificationRepository notificationRepository;
 
     private EmployeeDTO getCurrentEmployee() {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -179,12 +178,7 @@ public class LeaveServiceImpl implements LeaveService {
         balance.setUsedDays((int) (balance.getUsedDays() + requestedDays));
         leaveBalanceRepository.save(balance);
 
-        createNotification(
-                saved.getEmployeeId(),
-                "Your leave has been approved.",
-                NotificationType.LEAVE_APPROVED,
-                saved.getId()
-        );
+        // Notification triggered via notification-service (cross-service)
 
         EmployeeDTO emp = employeeClient.getEmployeeById(saved.getEmployeeId());
         return mapToResponse(saved, emp);
@@ -203,25 +197,10 @@ public class LeaveServiceImpl implements LeaveService {
         application.setManagerComment(comment);
         LeaveApplication saved = leaveApplicationRepository.save(application);
 
-        createNotification(
-                saved.getEmployeeId(),
-                "Your leave has been rejected.",
-                NotificationType.LEAVE_REJECTED,
-                saved.getId()
-        );
+        // Notification triggered via notification-service (cross-service)
 
         EmployeeDTO emp = employeeClient.getEmployeeById(saved.getEmployeeId());
         return mapToResponse(saved, emp);
-    }
-
-    private void createNotification(Long recipientId, String message, NotificationType type, Long referenceId) {
-        Notification notification = Notification.builder()
-                .recipientId(recipientId) // Changed from Employee entity to ID
-                .message(message)
-                .type(type)
-                .referenceId(referenceId)
-                .build();
-        notificationRepository.save(notification);
     }
 
     private LeaveApplicationResponse mapToResponse(LeaveApplication application, EmployeeDTO employee) {
