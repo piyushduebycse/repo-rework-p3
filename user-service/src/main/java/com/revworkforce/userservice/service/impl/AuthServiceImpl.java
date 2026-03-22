@@ -25,15 +25,15 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.getIdentifier(), request.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         
         // Since we are moving to Microservices, user details might just be extracted via email
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.getIdentifier())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
                 
-        String token = jwtTokenProvider.generateToken(user.getId());
+        String token = jwtTokenProvider.generateToken(authentication);
 
         return AuthResponse.builder()
                 .token(token)
